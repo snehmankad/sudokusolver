@@ -1,0 +1,159 @@
+#include <stdio.h>
+#include <bits/stdc++.h> 
+using namespace std;
+int row;
+int col;
+
+//all good
+bool findblank (int sudoku[9][9], int &row, int &col) //returns true if there is an unassigned value in grid
+{
+  //declare row and col as global variables initially
+  
+  for (row = 0 ; row < 9; row++)
+  {
+    for (col = 0 ; col < 9; col++)
+    {
+      if (sudoku[row][col] == 0)
+      {
+        return true;
+      }
+    }
+  }
+  
+  return false;
+}
+
+//no bugs here
+void printfn (int sudoku[9][9])
+{
+  for (int i = 0; i < 9; i++)
+  {
+    for (int j = 0; j < 9; j++)
+    {
+      if (sudoku[i][j] == 0)
+      printf ("X ");
+      
+      else
+      printf ("%d ", sudoku[i][j]);
+    }
+    printf("\n");
+   }
+}
+
+// all good
+bool checknum (int sudoku[9][9], int row, int col, int num)
+{
+  for (int i = 0; i < 9; i++)
+  {
+    if (sudoku[i][col] == num)
+    return false;
+  }
+  
+  for (int i = 0; i < 9; i++)
+  {
+    if (sudoku[row][i] == num)
+    return false;
+  }
+  
+  
+  for (int i = row - row%3; i < row - row%3 + 3; i++)
+  {
+    for (int j = col - col%3; j < col - col%3 + 3; j++)
+    {   
+        if (sudoku[i][j] == num)
+        return false;
+    }
+  }
+  
+  if (sudoku[row][col] != 0)
+  return false;
+  
+  return true;
+}
+
+bool solvemain (int sudoku[9][9])
+{
+    
+   int row;
+   int col;
+
+    //error was here
+  if (!findblank(sudoku, row, col))
+    return true;
+  
+  
+  
+  for (int num = 1; num < 10; num++)
+  {
+      if (checknum (sudoku,row,col,num))
+      { 
+        sudoku[row][col] = num;
+        if (solvemain(sudoku))
+			return true;
+        else
+			sudoku[row][col] = 0;
+      }
+  }
+  
+  return false;
+}
+ 
+
+int main()
+{
+
+//uncomment this whole piece of code to enter data or just hard code the 2D array 'sudoku' as per your requirements.
+/*    int sudoku[9][9];
+
+for (int i = 0; i< 9; i++)
+{
+  for (int j = 0; j < 9; j++)
+  {
+    sudoku[i][j] = 0;
+  }
+}
+*/
+/*
+while (1)
+{
+  int x, y;
+  
+  printf("Want to enter values (y/n) : ");
+  char ch;
+  scanf("%c", &ch);
+  scanf("%c", &ch);
+  if (ch == 'n' || ch == 'N')
+  {
+      break;
+  }
+  printf ("Enter index to enter (x,y) (top left = 0,0) : ");
+  scanf ("%d %d", &x, &y);
+  
+  printf ("Enter number : ");
+  scanf ("%d", &sudoku[x][y]);
+  
+  if (sudoku[x][y] > 9 || sudoku[x][y] < 1)
+  {
+    sudoku[x][y] = 0;
+    printf("Enter valid number (0-9)\n");
+  }
+  
+  printfn(sudoku);
+  /*
+  if (sudoku[x][y] == -1)
+  {
+    sudoku[x][y] = 0;
+    break;
+  }
+  */
+  
+  
+//}
+    int sudoku[9][9] = {{0,6,4,0,3,0,0,0,0}, {0,0,0,1,0,0,0,0,0},{3,0,5,0,8,0,0,0,2},{0,0,0,0,0,8,0,7,0},{7,5,0,6,0,2,4,0,0},{0,0,0,0,0,0,0,1,8},{0,0,0,0,0,0,0,0,0},{0,0,2,7,0,0,0,0,9},{1,0,3,0,0,4,0,6,0}};
+    if (solvemain(sudoku))  
+        printfn(sudoku);  
+    else
+       printf( "No solution exists");  
+  
+    return 0;
+}
